@@ -18,31 +18,16 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://aj-ai-studio.vercel.app",
-  "https://aj-ai-studio-j9b5d6vnk-arjeets-projects.vercel.app",
-  process.env.FRONTEND_URL,
-].filter(Boolean);
-
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests without an origin
-      // such as Postman/server-to-server requests
-      if (!origin) {
-        return callback(null, true);
-      }
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
+    origin: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// Handle preflight requests
+app.options("*", cors());
 
 // JSON body parser
 app.use(express.json());
@@ -68,7 +53,5 @@ app.get("/", (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(
-    `AJ AI Studio Backend running on port ${PORT}`
-  );
+  console.log(`AJ AI Studio Backend running on port ${PORT}`);
 });
